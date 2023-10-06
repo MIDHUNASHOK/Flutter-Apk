@@ -1,0 +1,30 @@
+name: express_check_in  # Update with your app name
+description: A new Express Check-in app  # Update with your app description
+
+publish_to: 'none'  # Remove this line if you wish to publish to pub.dev
+
+version: 2.0.0+1  # Update with your desired version number and build number
+
+environment:
+  sdk: '>=3.0.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  webview_flutter: ^2.3.0  # Use the latest version of webview_flutter
+  cupertino_icons: ^1.0.2
+  file_picker: ^4.1.6
+  permission_handler: ^11.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.10.0
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Add the path to your custom app icon under the assets section
+  assets:
+    - lib/icons/data-devices-icon.png  # Update with the correct path
