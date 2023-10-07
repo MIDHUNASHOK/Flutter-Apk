@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:file_picker/file_picker.dart'; // Add this import
+import 'package:file_picker/file_picker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,6 +33,26 @@ class _MyWebViewPageState extends State<MyWebViewPage> {
   late WebViewController _webViewController;
   bool isExternalUrl = false;
 
+  Future<bool> _onBackPressed() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Exit Confirmation'),
+        content: Text('Do you want to exit the app?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false), // No, do not exit
+            child: Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true), // Yes, exit
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ).then((value) => value ?? false);
+  }
+
   // Function to handle file selection
   Future<void> _pickAndUploadImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -41,12 +61,9 @@ class _MyWebViewPageState extends State<MyWebViewPage> {
 
     if (result != null) {
       PlatformFile file = result.files.first;
-      // Upload the selected file to your server or use it as needed.
-      // You can access the file using file.path.
-      // For example, you can send it to a web page using JavaScript.
       if (_webViewController != null) {
         _webViewController.evaluateJavascript(
-          'uploadImage("${file.path}");', // JavaScript function to handle the file
+          'uploadImage("${file.path}");',
         );
       }
     }
@@ -55,29 +72,20 @@ class _MyWebViewPageState extends State<MyWebViewPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        if (_webViewController != null && isExternalUrl) {
-          if (await _webViewController.canGoBack()) {
-            _webViewController.goBack();
-            return false;
-          }
-        }
-        return true;
-      },
+      onWillPop: _onBackPressed,
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 20,
           backgroundColor: Colors.white,
         ),
         body: WebView(
-          initialUrl: 'https://www.ktdcbooking.com/crc',
+          initialUrl: 'https://www.resworld.in/ec',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController controller) {
             _webViewController = controller;
           },
           onPageStarted: (String url) {
             setState(() {
-              // Check if the current URL is the external URL
               isExternalUrl = url == 'https://www.datadevices.com/thecentres/';
             });
           },
@@ -87,7 +95,6 @@ class _MyWebViewPageState extends State<MyWebViewPage> {
         //   children: [
         //     FloatingActionButton(
         //       onPressed: () {
-        //         // Reload the WebView page
         //         if (_webViewController != null) {
         //           _webViewController.reload();
         //         }

@@ -4,7 +4,7 @@
 
 
     <application
-        android:label="Hotelier FO"
+        android:label="theHotelier FO"
         android:name="${applicationName}"
         android:icon="@mipmap/dataicon">
         
